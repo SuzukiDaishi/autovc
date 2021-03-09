@@ -120,8 +120,9 @@ class Solver(object):
                     log += ", {}: {:.4f}".format(tag, loss[tag])
                 print(log)
                 
-
-    
-    
-
-    
+            if (i+1) % 1000 == 0:
+                torch.save(self.G.state_dict(), './autovc.ckpt')
+                print('saved ./autovc.ckpt')
+        
+        torch.save(self.G.state_dict(), './autovc.ckpt')
+        print('saved ./autovc.ckpt')
