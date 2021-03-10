@@ -1,5 +1,8 @@
 spmel/
 3000000-BL.ckpt
+checkpoint_step001000000_ema.pth
+autovc.ckpt
+.ipynb_checkpoints/
 
 .DS_Store
 .huskyrc.json
