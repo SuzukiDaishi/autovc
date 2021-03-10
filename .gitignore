@@ -3,6 +3,8 @@ spmel/
 checkpoint_step001000000_ema.pth
 autovc.ckpt
 .ipynb_checkpoints/
+wavs/*
+!.gitkeep
 
 .DS_Store
 .huskyrc.json
