@@ -8,8 +8,15 @@ from collections import OrderedDict
 import numpy as np
 import torch
 
-C = D_VECTOR(dim_input=80, dim_cell=768, dim_emb=256).eval().cuda()
-c_checkpoint = torch.load('3000000-BL.ckpt')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+C = None
+c_checkpoint = None
+if torch.cuda.is_available():
+    C = D_VECTOR(dim_input=80, dim_cell=768, dim_emb=256).eval().cuda()
+    c_checkpoint = torch.load('3000000-BL.ckpt')
+else :
+    C = D_VECTOR(dim_input=80, dim_cell=768, dim_emb=256).eval()
+    c_checkpoint = torch.load('3000000-BL.ckpt', map_location=torch.device('cpu'))
 new_state_dict = OrderedDict()
 for key, val in c_checkpoint['model_b'].items():
     new_key = key[7:]
@@ -44,7 +51,7 @@ for speaker in sorted(subdirList):
             tmp = np.load(os.path.join(dirName, speaker, fileList[idx_alt]))
             candidates = np.delete(candidates, np.argwhere(candidates==idx_alt))
         left = np.random.randint(0, tmp.shape[0]-len_crop)
-        melsp = torch.from_numpy(tmp[np.newaxis, left:left+len_crop, :]).cuda()
+        melsp = torch.from_numpy(tmp[np.newaxis, left:left+len_crop, :]).to(device)
         emb = C(melsp)
         embs.append(emb.detach().squeeze().cpu().numpy())     
     utterances.append(np.mean(embs, axis=0))
