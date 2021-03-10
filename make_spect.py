@@ -54,7 +54,7 @@ for subdir in sorted(subdirList):
     prng = RandomState(int(re.sub("\\D", "", subdir))) 
     for fileName in sorted(fileList):
         # Read audio file
-        x, fs = sf.read(os.path.join(dirName,subdir,fileName))
+        x, fs = sf.read(os.path.join(dirName,subdir,fileName), samplerate=16000)
         # Remove drifting noise
         y = signal.filtfilt(b, a, x)
         # Ddd a little random noise for model roubstness

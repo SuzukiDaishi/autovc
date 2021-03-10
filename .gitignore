@@ -2,6 +2,8 @@ spmel/
 3000000-BL.ckpt
 checkpoint_step001000000_ema.pth
 autovc.ckpt
+metadata.pkl
+results.pkl
 .ipynb_checkpoints/
 wavs/*
 !.gitkeep
