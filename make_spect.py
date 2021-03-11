@@ -7,6 +7,7 @@ from scipy.signal import get_window
 from librosa.filters import mel
 from numpy.random import RandomState
 import re
+import librosa
 
 
 def butter_highpass(cutoff, fs, order=5):
@@ -54,7 +55,7 @@ for subdir in sorted(subdirList):
     prng = RandomState(int(re.sub("\\D", "", subdir))) 
     for fileName in sorted(fileList):
         # Read audio file
-        x, fs = sf.read(os.path.join(dirName,subdir,fileName), channels=1, samplerate=16000)
+        x, fs = librosa.load(os.path.join(dirName,subdir,fileName), sr=16000)
         # Remove drifting noise
         y = signal.filtfilt(b, a, x)
         # Ddd a little random noise for model roubstness
