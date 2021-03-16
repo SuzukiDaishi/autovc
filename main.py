@@ -18,9 +18,7 @@ def main(config):
     solver = Solver(vcc_loader, config)
 
     solver.train()
-        
-    
-        
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -40,6 +38,12 @@ if __name__ == '__main__':
     
     # Miscellaneous.
     parser.add_argument('--log_step', type=int, default=10)
+
+    # モデルの保存パス
+    parser.add_argument('--save_path', type=str, default='./autovc.ckpt', help='model save path')
+
+    # 学習済モデルがある場合
+    parser.add_argument('--checkpoint', type=str, default=None, help='trained model path')
 
     config = parser.parse_args()
     print(config)

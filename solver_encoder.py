@@ -30,17 +30,24 @@ class Solver(object):
         self.log_step = config.log_step
 
         # Build the model and tensorboard.
-        self.build_model()
+        self.build_model(config.checkpoint)
 
             
-    def build_model(self):
+    def build_model(self, checkpoint = None):
         
         self.G = Generator(self.dim_neck, self.dim_emb, self.dim_pre, self.freq)        
         
         self.g_optimizer = torch.optim.Adam(self.G.parameters(), 0.0001)
         
         self.G.to(self.device)
-        
+
+        if checkpoint is not None:
+            g_checkpoint = None
+            if torch.cuda.is_available():
+                g_checkpoint = torch.load(checkpoint)
+            else :
+                g_checkpoint = torch.load(checkpoint, map_location='cpu')
+            self.G.load_state_dict(g_checkpoint)
 
     def reset_grad(self):
         """Reset the gradient buffers."""
