@@ -41,7 +41,8 @@ if __name__ == '__main__':
 
     # モデルの保存パス
     parser.add_argument('--save_path', type=str, default='./autovc.ckpt', help='model save path')
-
+    parser.add_argument('--save_step', type=int, default=1000)
+    
     # 学習済モデルがある場合
     parser.add_argument('--checkpoint', type=str, default=None, help='trained model path')
 

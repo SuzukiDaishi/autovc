@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as F
 import time
 import datetime
-
+from torch.utils.tensorboard import SummaryWriter
 
 class Solver(object):
 
@@ -30,6 +30,9 @@ class Solver(object):
         self.log_step = config.log_step
 
         # Build the model and tensorboard.
+        self.save_path = config.save_path
+        self.save_step = config.save_step
+        self.writer = SummaryWriter(log_dir='./runs')
         self.build_model(config.checkpoint)
 
             
@@ -53,7 +56,12 @@ class Solver(object):
         """Reset the gradient buffers."""
         self.g_optimizer.zero_grad()
       
-    
+    def save_losses(self, loss_id, loss_id_psnt, loss_cd, iter_num):
+        """ save tensorbord """
+        self.writer.add_scalar('loss_id/train', loss_id, iter_num)
+        self.writer.add_scalar('loss_id_psnt/train', loss_id_psnt, iter_num)
+        self.writer.add_scalar('loss_cd/train', loss_cd, iter_num)
+
     #=====================================================================================================================================#
     
     
@@ -114,6 +122,8 @@ class Solver(object):
             loss['G/loss_id_psnt'] = g_loss_id_psnt.item()
             loss['G/loss_cd'] = g_loss_cd.item()
 
+            self.save_losses(loss['G/loss_id'], loss['G/loss_id_psnt'], loss['G/loss_cd'], i+1)
+
             # =================================================================================== #
             #                                 4. Miscellaneous                                    #
             # =================================================================================== #
@@ -127,9 +137,9 @@ class Solver(object):
                     log += ", {}: {:.4f}".format(tag, loss[tag])
                 print(log)
                 
-            if (i+1) % 1000 == 0:
-                torch.save(self.G.state_dict(), './autovc.ckpt')
-                print('saved ./autovc.ckpt')
+            if (i+1) % self.save_step == 0:
+                torch.save(self.G.state_dict(), self.save_path)
+                print(f'saved {self.save_path}')
         
-        torch.save(self.G.state_dict(), './autovc.ckpt')
-        print('saved ./autovc.ckpt')
+        torch.save(self.G.state_dict(), self.save_path)
+        print(f'saved {self.save_path}')
