@@ -29,6 +29,11 @@ class Solver(object):
         self.device = torch.device('cuda:0' if self.use_cuda else 'cpu')
         self.log_step = config.log_step
 
+        # Adam
+        self.g_lr = config.g_lr
+        self.beta1 = config.beta1
+        self.beta2 = config.beta2
+
         # Build the model and tensorboard.
         self.save_path = config.save_path
         self.save_step = config.save_step
@@ -40,7 +45,7 @@ class Solver(object):
         
         self.G = Generator(self.dim_neck, self.dim_emb, self.dim_pre, self.freq)        
         
-        self.g_optimizer = torch.optim.Adam(self.G.parameters(), 0.0001)
+        self.g_optimizer = torch.optim.Adam(self.G.parameters(), self.g_lr, [self.beta1, self.beta2])
         
         self.G.to(self.device)
 
@@ -92,8 +97,7 @@ class Solver(object):
             
             x_real = x_real.to(self.device) 
             emb_org = emb_org.to(self.device) 
-                        
-       
+
             # =================================================================================== #
             #                               2. Train the generator                                #
             # =================================================================================== #

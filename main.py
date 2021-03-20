@@ -46,6 +46,11 @@ if __name__ == '__main__':
     # 学習済モデルがある場合
     parser.add_argument('--checkpoint', type=str, default=None, help='trained model path')
 
+    # Adam
+    parser.add_argument('--g_lr', type=float, default=0.0001, help='learning rate for G')
+    parser.add_argument('--beta1', type=float, default=0.9, help='beta1 for Adam optimizer')
+    parser.add_argument('--beta2', type=float, default=0.999, help='beta2 for Adam optimizer')
+
     config = parser.parse_args()
     print(config)
     main(config)
